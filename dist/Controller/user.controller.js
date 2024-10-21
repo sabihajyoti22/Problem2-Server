@@ -58,7 +58,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
         }
         else {
-            res.status(204).send("Client not found");
+            res.status(404).send({ message: "User not found" });
         }
     }
     catch (error) {

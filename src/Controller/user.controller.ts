@@ -44,7 +44,7 @@ const signIn = async (req: any, res: any) => {
             }
         }
         else {
-            res.status(204).send("Client not found")
+            res.status(404).send({ message: "User not found" })
         }
 
     } catch (error: any) {
