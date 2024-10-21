@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.get("/", (req, res) => {
-    res.send("<h1>Tried Thousand Times</h1>");
+    res.send("<h1>Home Route</h1>");
 });
 app.use("/api", ticket);
 module.exports = app;
