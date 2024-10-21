@@ -16,7 +16,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield userSchema.findOne({ email: req.body.email });
         if (user) {
-            res.status(409).send({ message: "User already exists, Try to signin" });
+            res.status(409).json({ message: "User already exists, Try to signin", data: user });
         }
         else {
             bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
@@ -41,24 +41,29 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { _id, password } = req.body;
-        const loginData = yield userSchema.findOne({ _id: _id });
-        if (loginData) {
-            if (loginData.activate) {
-                bcrypt.compare(password, loginData.password, function (err, result) {
-                    if (result) {
-                        res.status(200).json(loginData);
-                    }
-                    else {
-                        res.status(401).send({ message: "Credentials didn't match" });
-                    }
-                });
-            }
-            else {
-                res.status(401).send({ message: "Your account hasn't activated yet" });
-            }
+        if (_id.length !== 24) {
+            res.status(401).send({ message: "Not a valid user id" });
         }
         else {
-            res.status(404).send({ message: "User not found" });
+            const loginData = yield userSchema.findOne({ _id: _id });
+            if (loginData) {
+                if (loginData.activate) {
+                    bcrypt.compare(password, loginData.password, function (err, result) {
+                        if (result) {
+                            res.status(200).json(loginData);
+                        }
+                        else {
+                            res.status(401).send({ message: "Credentials didn't match" });
+                        }
+                    });
+                }
+                else {
+                    res.status(401).send({ message: "Your account hasn't activated yet" });
+                }
+            }
+            else {
+                res.status(404).send({ message: "User not found" });
+            }
         }
     }
     catch (error) {
