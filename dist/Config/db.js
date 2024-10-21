@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const config = require("./config");
 const mongoose = require("mongoose");
 const dbURL = config.db.url;

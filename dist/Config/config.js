@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // const path = require('path')
 // require("dotenv").config({ path: path.resolve(__dirname, '../../.env') })
 require("dotenv").config();

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");

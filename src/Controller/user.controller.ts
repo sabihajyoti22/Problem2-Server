@@ -2,6 +2,9 @@ const userSchema = require("../Model/user.model")
 const bcrypt = require("bcrypt")
 const saltRounds = 10
 
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
 const signUp = async (req: any, res: any) => {
     try {
         const user = await userSchema.findOne({ email: req.body.email })
@@ -17,6 +20,23 @@ const signUp = async (req: any, res: any) => {
                     password: hash
                 })
                 await newUser.save()
+
+                const msg = {
+                    to: req.body.email, // Change to your recipient
+                    from: 'sabihajyoti@sayburgh.com', // Change to your verified sender
+                    subject: 'Please verify your email address',
+                    text: 'Below a link is provided to verify your email address',
+                    html: '<a href="http://localhost:5173/activate">http://localhost:5173/activate</a>',
+                }
+
+                sgMail.send(msg)
+                // .then((response: any) => {
+                //     console.log(response[0].statusCode)
+                //     console.log(response[0].headers)
+                // })
+                // .catch((error: any) => {
+                //     console.error(error)
+                // })
                 res.status(200).json(newUser)
             })
         }
