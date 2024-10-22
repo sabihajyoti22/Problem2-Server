@@ -32,7 +32,7 @@ const signUp = async (req: any, res: any) => {
                 }
 
                 sgMail.send(msg).then((res: any) => {
-                    console.log('Success')
+                    console.log('Sent email successfully')
                 }).catch((err: any) => {
                     console.log(err)
                 })

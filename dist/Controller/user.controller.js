@@ -41,7 +41,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                     };
                     sgMail.send(msg).then((res) => {
-                        console.log('Success');
+                        console.log('Sent email successfully');
                     }).catch((err) => {
                         console.log(err);
                     });
