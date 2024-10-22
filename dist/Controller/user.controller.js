@@ -40,7 +40,11 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         text: 'Below a link is provided to verify your email address',
                         html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                     };
-                    sgMail.send(msg);
+                    sgMail.send(msg).then((res) => {
+                        console.log('Success');
+                    }).catch((err) => {
+                        console.log(err);
+                    });
                 });
             });
         }

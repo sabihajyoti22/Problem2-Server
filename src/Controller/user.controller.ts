@@ -31,7 +31,11 @@ const signUp = async (req: any, res: any) => {
                     html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                 }
 
-                sgMail.send(msg)
+                sgMail.send(msg).then((res: any) => {
+                    console.log('Success')
+                }).catch((err: any) => {
+                    console.log(err)
+                })
             })
         }
     } catch (error: any) {
