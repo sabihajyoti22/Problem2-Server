@@ -1,3 +1,4 @@
+require("dotenv").config()
 const userSchema = require("../Model/user.model")
 const bcrypt = require("bcrypt")
 const saltRounds = 10
@@ -20,24 +21,17 @@ const signUp = async (req: any, res: any) => {
                     password: hash
                 })
                 await newUser.save()
+                res.status(200).json(newUser)
 
                 const msg = {
                     to: req.body.email, // Change to your recipient
                     from: 'sabihajyoti@sayburgh.com', // Change to your verified sender
                     subject: 'Please verify your email address',
                     text: 'Below a link is provided to verify your email address',
-                    html: '<a href="http://localhost:5173/activate">http://localhost:5173/activate</a>',
+                    html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                 }
 
                 sgMail.send(msg)
-                // .then((response: any) => {
-                //     console.log(response[0].statusCode)
-                //     console.log(response[0].headers)
-                // })
-                // .catch((error: any) => {
-                //     console.error(error)
-                // })
-                res.status(200).json(newUser)
             })
         }
     } catch (error: any) {
@@ -55,12 +49,7 @@ const signIn = async (req: any, res: any) => {
             if (loginData) {
                 if (loginData.activate) {
                     bcrypt.compare(password, loginData.password, function (err: any, result: any) {
-                        if (result) {
-                            res.status(200).json(loginData)
-                        }
-                        else {
-                            res.status(401).send({ message: "Credentials didn't match" })
-                        }
+                        result ? res.status(200).json(loginData) : res.status(401).send({ message: "Credentials didn't match" })
                     })
                 } else {
                     res.status(401).send({ message: "Your account hasn't activated yet" })
@@ -78,9 +67,11 @@ const signIn = async (req: any, res: any) => {
 
 const activateAccount = async (req: any, res: any) => {
     try {
-        const user = await userSchema.findOne({ email: req.body.email })
-        user.activate = true
-        await user.save()
+        const user = await userSchema.findOne({ _id: req.body._id })
+        if (!user.activate) {
+            user.activate = true
+            await user.save()
+        }
         res.status(200).json(user)
     } catch (error: any) {
         res.status(500).send(error.message)

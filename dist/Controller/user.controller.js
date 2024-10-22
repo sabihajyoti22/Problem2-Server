@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("dotenv").config();
 const userSchema = require("../Model/user.model");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -31,22 +32,15 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         password: hash
                     });
                     yield newUser.save();
+                    res.status(200).json(newUser);
                     const msg = {
                         to: req.body.email, // Change to your recipient
                         from: 'sabihajyoti@sayburgh.com', // Change to your verified sender
                         subject: 'Please verify your email address',
                         text: 'Below a link is provided to verify your email address',
-                        html: '<a href="http://localhost:5173/activate">http://localhost:5173/activate</a>',
+                        html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                     };
                     sgMail.send(msg);
-                    // .then((response: any) => {
-                    //     console.log(response[0].statusCode)
-                    //     console.log(response[0].headers)
-                    // })
-                    // .catch((error: any) => {
-                    //     console.error(error)
-                    // })
-                    res.status(200).json(newUser);
                 });
             });
         }
@@ -66,12 +60,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             if (loginData) {
                 if (loginData.activate) {
                     bcrypt.compare(password, loginData.password, function (err, result) {
-                        if (result) {
-                            res.status(200).json(loginData);
-                        }
-                        else {
-                            res.status(401).send({ message: "Credentials didn't match" });
-                        }
+                        result ? res.status(200).json(loginData) : res.status(401).send({ message: "Credentials didn't match" });
                     });
                 }
                 else {
@@ -89,9 +78,11 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const activateAccount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = yield userSchema.findOne({ email: req.body.email });
-        user.activate = true;
-        yield user.save();
+        const user = yield userSchema.findOne({ _id: req.body._id });
+        if (!user.activate) {
+            user.activate = true;
+            yield user.save();
+        }
         res.status(200).json(user);
     }
     catch (error) {
