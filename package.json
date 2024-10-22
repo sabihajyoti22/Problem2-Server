@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "type": "tsc -w",
-    "start": "nodemon ./dist/index.js"
+    "start": "nodemon dist/index.js"
   },
   "keywords": [],
   "author": "",
