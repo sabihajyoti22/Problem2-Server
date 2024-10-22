@@ -24,8 +24,8 @@ const signUp = async (req: any, res: any) => {
                 res.status(200).json(newUser)
 
                 const msg = {
-                    to: req.body.email, // Change to your recipient
-                    from: 'sabihajyoti@sayburgh.com', // Change to your verified sender
+                    to: req.body.email,
+                    from: 'sabihajyoti@sayburgh.com',
                     subject: 'Please verify your email address',
                     text: 'Below a link is provided to verify your email address',
                     html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
