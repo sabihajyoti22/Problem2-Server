@@ -19,7 +19,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield userSchema.findOne({ email: req.body.email });
         if (user) {
-            res.status(409).json({ message: "User already exists, Try to sign in", data: user });
+            res.status(409).json({ message: "User already exists, Try to sign  in", data: user });
         }
         else {
             bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
@@ -40,11 +40,10 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                         text: 'Below a link is provided to verify your email address',
                         html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                     };
-                    sgMail.send(msg).then((res) => {
+                    setTimeout(() => __awaiter(this, void 0, void 0, function* () {
+                        yield sgMail.send(msg);
                         console.log('Sent email successfully');
-                    }).catch((err) => {
-                        console.log(err);
-                    });
+                    }), 1000);
                 });
             });
         }
