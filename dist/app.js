@@ -16,7 +16,7 @@ app.use(express.json());
 app.use('/api/auth', user);
 app.use("/", (req, res) => {
     res.statusCode = 200;
-    res.send("<h1>Welcome to Home</h1>");
+    res.send("<h1>Welcome to Home Route</h1>");
 });
 // Route not found error
 app.use((req, res) => {

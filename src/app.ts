@@ -19,7 +19,7 @@ app.use('/api/auth', user)
 
 app.use("/", (req: any, res: any) => {
     res.statusCode = 200;
-    res.send("<h1>Welcome to Home</h1>")
+    res.send("<h1>Welcome to Home Route</h1>")
 })
 
 // Route not found error
