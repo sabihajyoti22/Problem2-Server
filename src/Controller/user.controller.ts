@@ -10,7 +10,7 @@ const signUp = async (req: any, res: any) => {
     try {
         const user = await userSchema.findOne({ email: req.body.email })
         if (user) {
-            res.status(409).json({ message: "User already exists, Try to sign in", data: user })
+            res.status(409).json({ message: "User already exists, Try to sign  in", data: user })
         } else {
             bcrypt.hash(req.body.password, saltRounds, async function (err: any, hash: any) {
                 const newUser = userSchema({
@@ -31,11 +31,10 @@ const signUp = async (req: any, res: any) => {
                     html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
                 }
 
-                sgMail.send(msg).then((res: any) => {
+                setTimeout(async () => {
+                    await sgMail.send(msg)
                     console.log('Sent email successfully')
-                }).catch((err: any) => {
-                    console.log(err)
-                })
+                }, 1000)
             })
         }
     } catch (error: any) {
