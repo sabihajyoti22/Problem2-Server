@@ -19,7 +19,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield userSchema.findOne({ email: req.body.email });
         if (user) {
-            res.status(409).json({ message: "User already exists, Try to signin", data: user });
+            res.status(409).json({ message: "User already exists, Try to sign in", data: user });
         }
         else {
             bcrypt.hash(req.body.password, saltRounds, function (err, hash) {

@@ -10,7 +10,7 @@ const signUp = async (req: any, res: any) => {
     try {
         const user = await userSchema.findOne({ email: req.body.email })
         if (user) {
-            res.status(409).json({ message: "User already exists, Try to signin", data: user })
+            res.status(409).json({ message: "User already exists, Try to sign in", data: user })
         } else {
             bcrypt.hash(req.body.password, saltRounds, async function (err: any, hash: any) {
                 const newUser = userSchema({
