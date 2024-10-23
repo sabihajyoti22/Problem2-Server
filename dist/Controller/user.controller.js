@@ -33,17 +33,6 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                     });
                     yield newUser.save();
                     res.status(200).json(newUser);
-                    const msg = {
-                        to: req.body.email,
-                        from: 'sabihajyoti@sayburgh.com',
-                        subject: 'Please verify your email address',
-                        text: 'Below a link is provided to verify your email address',
-                        html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${newUser._id}">${process.env.FRONTEND_URL}/activate/${newUser._id}</a>`,
-                    };
-                    setTimeout(() => __awaiter(this, void 0, void 0, function* () {
-                        yield sgMail.send(msg);
-                        console.log('Sent email successfully');
-                    }), 1000);
                 });
             });
         }
@@ -92,4 +81,20 @@ const activateAccount = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(500).send(error.message);
     }
 });
-module.exports = { signUp, signIn, activateAccount };
+const sendMail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const msg = {
+            to: req.body.email,
+            from: 'sabihajyoti@sayburgh.com',
+            subject: 'Please verify your email address',
+            text: 'Below a link is provided to verify your email address',
+            html: `You can activate your acount through this link: <a href="${process.env.FRONTEND_URL}/activate/${req.body._id}">${process.env.FRONTEND_URL}/activate/${req.body._id}</a>`,
+        };
+        yield sgMail.send(msg);
+        res.status(200).json({ message: "Sent email successfully" });
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+module.exports = { signUp, signIn, activateAccount, sendMail };
